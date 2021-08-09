@@ -10,8 +10,118 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
+model Customer {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  username  String    @unique
+  name      String
+  surname   String
+  phone     Int       @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Comment   Comment[]
+}
+
+model Warlock {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  name      String
+  surname   String
+  phone     Int      @unique
+  password  String
+  about     String
+  rating    Int
+  tags      String
+  comments  String
+  status    Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Gig       Gig[]
+}
+
+model Admin {
+  id                   Int                    @id @default(autoincrement())
+  email                String                 @unique
+  password             String
+  username             String                 @unique
+  name                 String
+  surname              String
+  phone                Int                    @unique
+  about                String
+  image                String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  Blog                 Blog[]
+  HoroscopeDescription HoroscopeDescription[]
+}
+
+model Gig {
+  id          Int       @id @default(autoincrement())
+  description String
+  price       Int
+  title       String
+  duration    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  warlockId   Int
+  warlock     Warlock   @relation(fields: [warlockId], references: [id])
+  Comment     Comment[]
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  text       String
+  rate       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  gigId      Int
+  gig        Gig      @relation(fields: [gigId], references: [id])
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Gig         Gig[]
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  image       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  adminId     Int
+  admin       Admin    @relation(fields: [adminId], references: [id])
+}
+
+model HoroscopeDescription {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  image       String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  horoscopeId Int
+  horoscope   Horoscope @relation(fields: [horoscopeId], references: [id])
+  adminId     Int
+  admin       Admin     @relation(fields: [adminId], references: [id])
+}
+
+model Horoscope {
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  image                String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  HoroscopeDescription HoroscopeDescription[]
 }
